@@ -18,7 +18,7 @@ typedef void (*ftimer_InterruptFunc_t)(void);
 /// Initialize the module.
 /// @param[in] fp Callback function on period.
 /// @param[in] ft_res Resolution of fast timer.
-/// @return 0=ok 1=...
+/// @return 0=ok 1=... 2=...
 int ftimer_Init(ftimer_InterruptFunc_t fp, unsigned ft_res);
 
 /// Enter the forever loop.
@@ -32,6 +32,6 @@ int ftimer_Destroy(void);
 
 /// Get number of microseconds since beginning.
 /// @return Microseconds.
-long ftimer_CurrentUsec(void);
+//long ftimer_CurrentUsec(void);
 
 #endif // FTIMER_H

@@ -7,7 +7,8 @@
         {
             "name": "ctimer",
             "includePath": [
-                "${workspaceFolder}/source"
+                "${workspaceFolder}/source",
+                "${workspaceFolder}/../c_bag_of_tricks/source"
             ],
             // "defines": [
             //     "HAVE_LIST"

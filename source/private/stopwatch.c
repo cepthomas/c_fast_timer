@@ -115,10 +115,10 @@ bool stopwatch_IsRunning(void)
 }
 
 //--------------------------------------------------------//
-double stopwatch_ElapsedMilliseconds(void)
+long stopwatch_ElapsedMicroseconds(void)
 {
-    double msec = p_ElapsedTicks() * 1000.0 / p_tick_frequency;
-    return msec;
+    long usec = p_ElapsedTicks() * 1000000 / p_tick_frequency;
+    return usec;
 }
 
 //--------------------------------------------------------//

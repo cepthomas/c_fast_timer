@@ -21,9 +21,17 @@ static MMRESULT p_sys_handle = -1;
 /// System mmtimer callback. Ignore all args.
 static void CALLBACK p_TimerCallback(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2);
 
+/// Where we are in p_period.
+static double p_current_msec = 0.0;
 
+/// <summary>Stopwatch support.</summary>
+long p_last_usec = -1;
 
-static int _counter = 0; //TODO
+/// Module status.
+static int p_status = 0;
+
+/// Module status.
+static bool p_running = false;
 
 
 //---------------- Public API Implementation -------------//
@@ -31,56 +39,63 @@ static int _counter = 0; //TODO
 //--------------------------------------------------------//
 int ftimer_Init(ftimer_InterruptFunc_t fp, unsigned ft_res)
 {
-    int stat = 0;
+    if(fp == NULL || ft_res < 1)
+    {
+        p_status = 1;
+    }
+    else
+    {
+        int swst = stopwatch_Init();
+        if(swst != 0)
+        {
+            p_status = 2;
+        }
+        else
+        {
+            p_interrupt_func = fp;
+            p_ft_res = ft_res;
+        }
+    }
 
-    p_interrupt_func = fp;
-    p_ft_res = ft_res;
-
-    // if(!Stopwatch.IsHighResolution)
-    // {
-    //     throw new Exception("High res performance counter is not available.");
-    // }
-
-
-    return stat;
+    return p_status;
 }
 
 //--------------------------------------------------------//
 int ftimer_Run(unsigned period)
 {
-    int stat = 0;
-
-    p_period = period;
-
-    if(period > 0)
+    if(p_status == 0)
     {
-        // Clean up if already running.
-        if(p_sys_handle >= 0)
+        p_period = period;
+
+        if(period > 0)
         {
-            timeKillEvent(p_sys_handle);
-        }
+            // Clean up if already running.
+            if(p_sys_handle >= 0)
+            {
+                timeKillEvent(p_sys_handle);
+            }
 
-        p_sys_handle = timeSetEvent(p_ft_res, 0, p_TimerCallback, 0, TIME_PERIODIC);
-    }
-    else
-    {
-        if(p_sys_handle >= 0)
+            p_running = true;
+            p_sys_handle = timeSetEvent(p_ft_res, 0, p_TimerCallback, 0, TIME_PERIODIC);
+        }
+        else
         {
-            timeKillEvent(p_sys_handle);
+            if(p_sys_handle >= 0)
+            {
+                timeKillEvent(p_sys_handle); //check return result != TIMERR_NOERROR
+            }
+            p_sys_handle = -1;
+            p_status = 3;
+            p_running = false;
         }
-        p_sys_handle = -1;
-
-        //check return result != TIMERR_NOERROR
     }
 
-    return stat;
+    return p_status;
 }
 
 //--------------------------------------------------------//
 int ftimer_Destroy(void)
 {
-    int stat = 0;
-
     if(p_sys_handle >= 0)
     {
         timeKillEvent(p_sys_handle);
@@ -89,16 +104,24 @@ int ftimer_Destroy(void)
     p_sys_handle = -1;
     p_period = 0;
     p_interrupt_func = NULL;
+    p_status = 0;
+    p_running = false;
 
-    return stat;
+    return p_status;
 }
-
 
 //--------------------------------------------------------//
-long ftimer_CurrentUsec(void)
-{
-    return 9999;
-}
+// long ftimer_CurrentUsec(void)
+// {
+//     long usec = 0;
+
+//     if(p_status == 0)
+//     {
+//         usec = stopwatch_ElapsedMicroseconds();   
+//     }
+
+//     return usec;
+// }
 
 
 //---------------- Private Implementation -------------//
@@ -106,42 +129,33 @@ long ftimer_CurrentUsec(void)
 //--------------------------------------------------------//
 void CALLBACK p_TimerCallback(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 {
-    _counter++;
+    if(p_running)
+    {
+        if(p_last_usec != -1)
+        {
+            // When are we?
+            long t = stopwatch_ElapsedMicroseconds(); // snap
+            double msec = (t - p_last_usec) * 1000.0;
+            p_last_usec = t;
 
+            // Check for expirations.
+            p_current_msec += msec;
 
+            const double ALLOWANCE = 0.5; // msec
 
-    /// <summary>Used for more accurate timing.</summary>
-    // readonly Stopwatch _sw = new Stopwatch();
-
-    // /// <summary>Indicates whether or not the timer is running.</summary>
-    // bool _running = false;
-
-    // /// <summary>Stopwatch support.</summary>
-    // long _lastTicks = -1;
-
-    // if(_running)
-    // {
-    //     if(_lastTicks != -1)
-    //     {
-    //         // When are we?
-    //         long t = _sw.ElapsedTicks; // snap
-    //         double msec = (t - _lastTicks) * 1000D / Stopwatch.Frequency;
-    //         _lastTicks = t;
-
-    //         // Check for expirations.
-    //         timer.current += msec;
-    //         if((timer.period - timer.current) < allowance)
-    //         {
-    //             elapsed.Add(tid);
-    //             timer.current = 0.0;
-    //             TimerElapsedEvent?.Invoke(this, new TimerEventArgs() { ElapsedTimers = elapsed });
-    //         }
-    //     }
-    //     else
-    //     {
-    //         // Starting.
-    //         _lastTicks = _sw.ElapsedTicks;
-    //     }
-    // }
-
+            if((p_period - p_current_msec) < ALLOWANCE)
+            {
+                p_current_msec = 0.0;
+                if(p_interrupt_func != NULL)
+                {
+                    p_interrupt_func();
+                }
+            }
+        }
+        else
+        {
+            // Starting.
+            p_last_usec = stopwatch_ElapsedMicroseconds();
+        }
+    }
 }
