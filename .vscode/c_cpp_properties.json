@@ -1,0 +1,21 @@
+{
+    "enableConfigurationSquiggles": true,
+    "env": {
+        "gccPath": "C:/MinGW/bin"
+    },
+    "configurations": [
+        {
+            "name": "ctimer",
+            "includePath": [
+                "${workspaceFolder}/source"
+            ],
+            // "defines": [
+            //     "HAVE_LIST"
+            // ],
+            "compilerPath": "${gccPath}/g++",
+            //"cStandard": "c99",
+            "intelliSenseMode": "gcc-x86"
+        }
+    ],
+    "version": 4
+}

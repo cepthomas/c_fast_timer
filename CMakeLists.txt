@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.5)
+
+project(ftimer_test)
+
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_CXX_STANDARD 11)
+
+# needs -g to debug. Probably get rid of -Wno-deprecated-declarations.
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -Werror") # -Wno-unused-variable")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall")
+
+
+include_directories(
+    source
+    ../c_bag_of_tricks/source
+    )
+
+# Source files.
+add_executable(ftimer_test
+    source/private/ftimer.c
+    source/private/stopwatch.c
+    test/main.cpp
+    test/test_ftimer.cpp
+    test/test_stopwatch.cpp
+    ../c_bag_of_tricks/source/private/pnut.cpp
+    )
+
+target_link_libraries(ftimer_test libwinmm.a)
