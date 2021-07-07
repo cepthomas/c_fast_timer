@@ -31,6 +31,12 @@ static int p_status = 0;
 /// Timer status.
 static bool p_running = false;
 
+/// Simple stats.
+double p_tmin = 1000;
+
+/// Simple stats.
+double p_tmax = 0;
+
 
 //---------------- Public API Implementation -------------//
 
@@ -54,6 +60,9 @@ int ftimer_Init(ftimer_InterruptFunc_t fp, unsigned ft_res)
             p_ft_res = ft_res;
         }
     }
+
+    p_tmin = 1000;
+    p_tmax = 0;
 
     return p_status;
 }
@@ -89,6 +98,8 @@ int ftimer_Run(unsigned period)
             p_sys_handle = 0;
             p_status = -1;
             p_running = false;
+
+            //printf("p_tmin:%g p_tmax:%g\n", p_tmin, p_tmax);
         }
     }
 
@@ -130,6 +141,9 @@ void CALLBACK p_TimerCallback(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 
         // Arm for next capture.
         stopwatch_Reset();
+
+        p_tmin = t < p_tmin ? t : p_tmin;
+        p_tmax = t > p_tmax ? t : p_tmax;
 
         // double msec = t - p_last_msec;
         // p_last_msec = t;

@@ -17,8 +17,12 @@ int stopwatch_Init(void);
 /// @return 0=ok 1=invalid stopwatch
 int stopwatch_Reset(void);
 
-/// How long since stopwatch_Reset().
+/// How long since last stopwatch_Reset().
 /// @return msec
 double stopwatch_ElapsedMsec(void);
+
+/// How long since stopwatch_Init().
+/// @return msec
+double stopwatch_TotalElapsedMsec(void);
 
 #endif // STOPWATCH_H
