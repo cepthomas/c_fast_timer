@@ -1,3 +1,6 @@
+
+//#include <Windows.h>
+#include <unistd.h>
 #include <cstdio>
 #include <cstring>
 
@@ -10,21 +13,19 @@ extern "C"
 
 
 
-
-
 /////////////////////////////////////////////////////////////////////////////
 UT_SUITE(STOPWATCH_BASIC, "Test all stopwatch functions.")
 {
     // Happy path.
-    int status = stopwatch_Init();
-    UT_EQUAL(status, 0);
+    UT_EQUAL(stopwatch_Init(), 0);
+    UT_CLOSE(stopwatch_ElapsedMsec(), 0.0, 0.01);
 
-// int stopwatch_Destroy(void);
-// int stopwatch_Start(void);
-// int stopwatch_Stop(void);
-// bool stopwatch_IsRunning(void);
-// double stopwatch_ElapsedMilliseconds(void);
-// long stopwatch_ElapsedTicks(void);
+    UT_EQUAL(stopwatch_Reset(), 0);
+    UT_CLOSE(stopwatch_ElapsedMsec(), 0.0, 0.01);
+
+    sleep(1);
+
+    UT_CLOSE(stopwatch_ElapsedMsec(), 1000.0, 5.0); // because sleep() is sloppy
 
     return 0;
 }
