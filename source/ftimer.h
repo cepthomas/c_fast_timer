@@ -9,17 +9,17 @@
 
 
 /// Type: Function pointer for handling of timer ticks.
-/// @param[in] msec Since last time.
+/// @param msec Since last time.
 typedef void (*ftimer_InterruptFunc_t)(double msec);
 
 /// Initialize the module.
-/// @param[in] fp Callback function on period.
-/// @param[in] ft_res Resolution of fast timer.
+/// @param fp Callback function on period.
+/// @param ft_res Resolution of fast timer.
 /// @return 0=ok -1=bad arg 2=internal failure
 int ftimer_Init(ftimer_InterruptFunc_t fp, unsigned ft_res);
 
 /// Enter the forever loop.
-/// @param[in] Desired period in msec, 0 stops.
+/// @param Desired period in msec, 0 stops.
 /// @return Status on exit.
 int ftimer_Run(unsigned period);
 
