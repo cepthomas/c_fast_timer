@@ -10,5 +10,12 @@ unloaded system. That should be good enough for midi.
 
 See `test_ftimer.cpp` for usage.
 
+# Build
+A VS Code workspace using mingw and CMake is supplied.
+
+This requires [c_bag_of_tricks](https://github.com/cepthomas/c_bag_of_tricks)
+at the same level as this project. Maybe I'll make it a submodule some time.
+
+
 # Reading
 [Beware of QueryPerformanceCounter()](https://www.virtualdub.org/blog2/entry_106.html)
