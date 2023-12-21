@@ -20,7 +20,7 @@ static unsigned p_ft_res = 10;
 static MMRESULT p_sys_handle = 0;
 
 /// System mmtimer callback. Ignore all args.
-static void CALLBACK p_TimerCallback(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2);
+static void CALLBACK p_TimerCallback(UINT uID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2);
 
 /// Where we are in p_period.
 static double p_accum_msec = 0.0;
@@ -132,7 +132,7 @@ bool ftimer_IsRunning(void)
 //---------------- Private Implementation -------------//
 
 //--------------------------------------------------------//
-void CALLBACK p_TimerCallback(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
+void CALLBACK p_TimerCallback(UINT uID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2)
 {
     if(p_running)
     {

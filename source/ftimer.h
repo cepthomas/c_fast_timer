@@ -2,6 +2,8 @@
 #ifndef FTIMER_H
 #define FTIMER_H
 
+#include <stdbool.h>
+
 
 /// @brief A fast (msec) timer based on system multimedia timer. See READ_ME.
 
@@ -19,7 +21,7 @@ typedef void (*ftimer_InterruptFunc_t)(double msec);
 int ftimer_Init(ftimer_InterruptFunc_t fp, unsigned ft_res);
 
 /// Enter the forever loop.
-/// @param Desired period in msec, 0 stops.
+/// @param Desired period in msec or 0 to stop.
 /// @return Status on exit.
 int ftimer_Run(unsigned period);
 
