@@ -3,6 +3,8 @@
 
 
 #include <windows.h>
+#include <stdbool.h>
+
 
 /// Number of data points to grab for statistics. TODO make user selectable.
 #define NUM_SAMPLES 100
