@@ -17,10 +17,10 @@ static long long p_start_tick;
 /// Periodic time.
 static long long p_last_tick;
 
-/// False if high res is not available.
-static bool p_valid = false;
+/// Don't init multiple times.
+static bool p_inited = false;
 
-/// The current performance counter scale, in ticks per microsecond.
+/// The current performance counter scale.
 static double p_ticks_per_msec;
 
 /// The current performance counter value.
@@ -31,35 +31,27 @@ static long long p_CurrentTick(void);
 //---------------- Public API Implementation -------------//
 
 //--------------------------------------------------------//
-int stopwatch_Init(void)
+void stopwatch_Init(void)
 {
-    p_start_tick = 0;
-    p_last_tick = 0;
-
-    LARGE_INTEGER f;
-    if(QueryPerformanceFrequency(&f))
+    if (!p_inited)
     {
-        p_valid = true;
-        p_ticks_per_msec = (double)f.QuadPart / 1000.0;
-        stopwatch_Reset();
-    }
-    else
-    {
-        p_valid = false;
-    }
+        p_start_tick = 0;
+        p_last_tick = 0;
 
-    return p_valid ? 0 : 1;
+        LARGE_INTEGER f;
+        if (QueryPerformanceFrequency(&f))
+        {
+            p_inited = true;
+            p_ticks_per_msec = (double)f.QuadPart / 1000.0;
+            stopwatch_Reset();
+        }
+    }
 }
 
 //--------------------------------------------------------//
-int stopwatch_Reset(void)
+void stopwatch_Reset(void)
 {
-    if(p_valid)
-    {
-        p_last_tick = p_CurrentTick();
-    }
-
-    return p_valid ? 0 : 1;
+    p_last_tick = p_CurrentTick();
 }
 
 //--------------------------------------------------------//
@@ -74,7 +66,6 @@ double stopwatch_ElapsedMsec(void)
 double stopwatch_TotalElapsedMsec(void)
 {
     long long elapsed_ticks = p_CurrentTick() - p_start_tick;
-
     double msec = (double)elapsed_ticks / p_ticks_per_msec;
     return msec;
 }

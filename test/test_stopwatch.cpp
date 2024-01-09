@@ -17,10 +17,10 @@ extern "C"
 UT_SUITE(STOPWATCH_BASIC, "Test all stopwatch functions.")
 {
     // Happy path.
-    UT_EQUAL(stopwatch_Init(), 0);
+    stopwatch_Init();
     UT_CLOSE(stopwatch_ElapsedMsec(), 0.0, 0.01);
 
-    UT_EQUAL(stopwatch_Reset(), 0);
+    stopwatch_Reset();
     UT_CLOSE(stopwatch_ElapsedMsec(), 0.0, 0.01);
 
     sleep(1);

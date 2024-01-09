@@ -1,7 +1,6 @@
 
 #include <windows.h>
 #include <stdio.h>
-#include "stopwatch.h"
 #include "ftimer.h"
 
 
@@ -32,10 +31,16 @@ static int p_status = 0;
 static bool p_running = false;
 
 /// Simple stats.
-double p_tmin = 1000;
+static double p_tmin = 1000;
 
 /// Simple stats.
-double p_tmax = 0;
+static double p_tmax = 0;
+
+/// Measuring.
+static long long p_last_tick = -1;
+
+/// The performance counter scale.
+static double p_ticks_per_msec;
 
 
 //---------------- Public API Implementation -------------//
@@ -49,16 +54,12 @@ int ftimer_Init(ftimer_InterruptFunc_t fp, unsigned ft_res)
     }
     else
     {
-        int swst = stopwatch_Init();
-        if(swst != 0)
-        {
-            p_status = -1;
-        }
-        else
-        {
-            p_interrupt_func = fp;
-            p_ft_res = ft_res;
-        }
+        LARGE_INTEGER f;
+        QueryPerformanceFrequency(&f);
+        p_ticks_per_msec = (double)f.QuadPart / 1000.0;
+
+        p_interrupt_func = fp;
+        p_ft_res = ft_res;
     }
 
     p_tmin = 1000;
@@ -84,8 +85,10 @@ int ftimer_Run(unsigned period)
             }
 
             p_running = true;
-            //p_last_msec = stopwatch_ElapsedMsec();
             p_accum_msec = 0.0;
+            LARGE_INTEGER f;
+            QueryPerformanceCounter(&f);
+            p_last_tick = f.QuadPart;
             p_sys_handle = timeSetEvent(p_ft_res, 0, p_TimerCallback, 0, TIME_PERIODIC);
         }
         else // stop
@@ -98,7 +101,6 @@ int ftimer_Run(unsigned period)
             p_sys_handle = 0;
             p_status = -1;
             p_running = false;
-
             //printf("p_tmin:%g p_tmax:%g\n", p_tmin, p_tmax);
         }
     }
@@ -137,20 +139,26 @@ void CALLBACK p_TimerCallback(UINT uID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR d
     if(p_running)
     {
         // When are we?
-        double t = stopwatch_ElapsedMsec();
+        LARGE_INTEGER f;
+        QueryPerformanceCounter(&f);
+        long long elapsed_ticks = f.QuadPart - p_last_tick;
+        double msec = (double)(elapsed_ticks / p_ticks_per_msec);
 
-        // Arm for next capture.
-        stopwatch_Reset();
+        // // When are we?
+        // double t = stopwatch_ElapsedMsec();
 
-        p_tmin = t < p_tmin ? t : p_tmin;
-        p_tmax = t > p_tmax ? t : p_tmax;
+        // // Arm for next capture.
+        // stopwatch_Reset();
 
-        // double msec = t - p_last_msec;
-        // p_last_msec = t;
+        p_tmin = msec < p_tmin ? msec : p_tmin;
+        p_tmax = msec > p_tmax ? msec : p_tmax;
+
+        // double msec = msec - p_last_msec;
+        // p_last_msec = msec;
 
         // Check for expirations.
         // p_current_msec += msec;
-        p_accum_msec += t;
+        p_accum_msec += msec;
 
         const double ALLOWANCE = 0.5; // msec
 

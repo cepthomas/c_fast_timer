@@ -2,7 +2,6 @@
 #include <windows.h>
 #include <math.h>
 
-#include "stopwatch.h"
 #include "timeanalyzer.h"
 
 
@@ -51,7 +50,7 @@ static long long _CurrentTick(void)
     return ts.QuadPart;
 }
 
-// Conversion for stopwatch values.
+// Conversion for values.
 // @return msec
 static double _TicksToMsec(long ticks)
 {
@@ -69,15 +68,9 @@ bool timeanalyzer_Init(void)
     timeanalyzer_Reset();
 
     LARGE_INTEGER f;
-    if(QueryPerformanceFrequency(&f))
-    {
-        _valid = true;
-        _ticks_per_msec = (double)f.QuadPart / 1000.0;
-    }
-    else
-    {
-        _valid = false;
-    }
+    QueryPerformanceFrequency(&f);
+    _valid = true;
+    _ticks_per_msec = (double)f.QuadPart / 1000.0;
 
     return _valid;
 }

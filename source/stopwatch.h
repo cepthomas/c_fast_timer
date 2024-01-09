@@ -10,12 +10,10 @@
 //---------------- Public API ----------------------//
 
 /// Initialize the module.
-/// @return 0=ok 1=high res not available.
-int stopwatch_Init(void);
+void stopwatch_Init(void);
 
 /// Reset the start time.
-/// @return 0=ok 1=invalid stopwatch
-int stopwatch_Reset(void);
+void stopwatch_Reset(void);
 
 /// How long since last stopwatch_Reset().
 /// @return msec
