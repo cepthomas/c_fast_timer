@@ -12,7 +12,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall")
 
 include_directories(
     source
-    ../c_bag_of_tricks/source
     ../c_bag_of_tricks/pnut
     )
 
