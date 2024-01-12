@@ -9,10 +9,12 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall")
 
+# TODO1 fix these paths. Or use built libs?
+set(CBOT   "C:/Dev/repos/C/c_bag_of_tricks")
 
 include_directories(
     source
-    ../c_bag_of_tricks/pnut
+    ${CBOT}/pnut
     )
 
 # Source files.
@@ -22,7 +24,7 @@ add_executable(ftimer_test
     test/main.cpp
     test/test_ftimer.cpp
     test/test_stopwatch.cpp
-    ../c_bag_of_tricks/pnut/pnut.cpp
+    ${CBOT}/pnut/pnut.cpp
     )
 
 target_link_libraries(ftimer_test libwinmm.a)

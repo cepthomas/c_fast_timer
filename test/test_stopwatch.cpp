@@ -25,7 +25,7 @@ UT_SUITE(STOPWATCH_BASIC, "Test all stopwatch functions.")
 
     sleep(1);
 
-    UT_CLOSE(stopwatch_ElapsedMsec(), 1000.0, 5.0); // because sleep() is sloppy
+    UT_CLOSE(stopwatch_ElapsedMsec(), 1000.0, 5.0); // because sleep() is sloppy TODO2 still off a bit on first one.
 
     return 0;
 }
