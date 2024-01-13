@@ -23,19 +23,19 @@ static bool _valid = false;
 /// The current performance counter scale, in ticks per msec.
 static double _ticks_per_msec;
 
-// Delay at start.
+/// Delay at start.
 static int _skip_count = 0;
 
-// Number of initial data points to exclude from stats.
-static int _skip = 0;
+/// Number of initial data points to exclude from stats.
+//static int _skip = 0;
 
-// Accumulated data points.
+/// Accumulated data points.
 static double _samples[NUM_SAMPLES];
 
-// Location in _samples.
+/// Location in _samples.
 static int _sample_index = 0;
 
-// Analysis results.
+/// Analysis results.
 static time_results_t _results;
 
 

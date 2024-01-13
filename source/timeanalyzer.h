@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 
-/// Number of data points to grab for statistics. TODO make user selectable.
+/// Number of data points to grab for statistics. TODO2 make user selectable.
 #define NUM_SAMPLES 100
 
 /// Analysis results in msec.
