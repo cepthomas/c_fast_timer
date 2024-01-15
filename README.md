@@ -1,5 +1,12 @@
 # c_fast_timer
 
+For conventions see [c_modular](https://github.com/cepthomas/c_modular/blob/master/README.md).
+
+Note: [Beware of QueryPerformanceCounter()](https://www.virtualdub.org/blog2/entry_106.html)
+
+# Components
+
+## ftimer
 A fast (msec) timer based on Windows multimedia timer. The win multimedia timer is erratic with possible
 errors of many msec.
 
@@ -10,12 +17,11 @@ unloaded system. That should be good enough for midi.
 
 See `test_ftimer.cpp` for usage.
 
-# Build
-A VS Code workspace using mingw and CMake is supplied.
+## stopwatch
 
-This requires [c_bag_of_tricks](https://github.com/cepthomas/c_bag_of_tricks)
-at the same level as this project. Maybe I'll make it a submodule some time.
+Stopwatch similar to the .NET component.
 
+## timeanalyzer
 
-# Reading
-[Beware of QueryPerformanceCounter()](https://www.virtualdub.org/blog2/entry_106.html)
+Takes repeated time samples and performs some basic statistics.
+

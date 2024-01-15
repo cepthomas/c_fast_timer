@@ -5,7 +5,6 @@
 #include <stdbool.h>
 
 
-/// @brief Stopwatch similar to C# class.
 
 //---------------- Public API ----------------------//
 
