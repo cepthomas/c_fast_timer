@@ -22,7 +22,7 @@ typedef struct time_results
 
 /// Initialize.
 /// @return valid
-bool timeanalyzer_Init(void); // TODO-T unit tests.
+bool timeanalyzer_Init(void); // TODO2 need unit tests.
 
 /// Resets everythin.
 /// @return valid
