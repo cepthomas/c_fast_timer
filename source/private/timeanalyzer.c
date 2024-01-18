@@ -63,7 +63,6 @@ static double _TicksToMsec(long ticks)
 //--------------------------------------------------------//
 bool timeanalyzer_Init(void)
 {
-    //p_start_tick = 0;
     _last_tick = 0;
     timeanalyzer_Reset();
 

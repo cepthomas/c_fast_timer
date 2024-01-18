@@ -21,11 +21,10 @@ typedef struct time_results
 
 
 /// Initialize.
-/// @return valid
+/// @return status
 bool timeanalyzer_Init(void); // TODO2 need unit tests.
 
-/// Resets everythin.
-/// @return valid
+/// Resets everything.
 void timeanalyzer_Reset(void);
 
 /// Start or stop the analysis.
